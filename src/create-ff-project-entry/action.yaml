@@ -1,0 +1,5 @@
+name: Check PR for New Temporary FF
+description: Check if a PR description contains a FF, and add it to the FF project table
+runs:
+  using: node16
+  main: createFeatureFlagEntryInProject.js
