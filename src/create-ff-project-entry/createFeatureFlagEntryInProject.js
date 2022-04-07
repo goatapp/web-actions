@@ -9,7 +9,7 @@ const getAndParsePullRequestDescriptionForFeatureFlag = () => {
   }
 
 if(pullRequest.body.indexOf('temp_web_enabled_') > 0) {
-  core.info('FF in description', pullRequest)
+  core.info('FF in description', pullRequest.body);
 }
 
   return {assignee: pullRequest.user.login , featureFlag: 'temp_web_enable_test_ff'};
