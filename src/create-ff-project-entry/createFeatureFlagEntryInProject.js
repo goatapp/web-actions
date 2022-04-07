@@ -20,13 +20,13 @@ const createFeatureFlagEntryInProject = () => {
 
     core.debug(featureFlag);
 
-    github.rest.issues.addLabels({
-      issue_number: context.issue.number,
-      owner: assignee,
-      repo: context.repo.repo,
-      title: featureFlag,
-      labels: ['Temporary Feature Flag']
-    });
+    // github.rest.issues.addLabels({
+    //   issue_number: context.issue.number,
+    //   owner: assignee,
+    //   repo: context.repo.repo,
+    //   title: featureFlag,
+    //   labels: ['Temporary Feature Flag']
+    // });
 
     core.exportVariable('author', commit.data.commit.author.email)
     core.info(`${context.issue.number} ${assignee}, ${context.repo.repo}`)
