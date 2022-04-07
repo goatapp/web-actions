@@ -4,7 +4,7 @@ const github = require('@actions/github');
 const getAndParsePullRequestDescriptionForFeatureFlag = () => {
   const { pull_request: pullRequest } = github.context.payload;
   core.debug(`Pull Request: ${JSON.stringify(pullRequest)}`);
-  core.debug( JSON.stringify(pullRequest.user.login));
+  core.info( JSON.stringify(pullRequest.user.login));
   if (pullRequest === undefined || pullRequest?.body === undefined) {
     throw new Error('This action should only be run with Pull Request Events');
   }
