@@ -53,8 +53,9 @@ const createFeatureFlagEntryInProject = async () => {
 
     const context = github.context;
 
-    const projects =  await octokit.request('GET /users/{username}/projects', {
-      username: assignee
+    const projects =  await octokit.request('GET /repos/{owner}/{repo}/projects', {
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
     });
 
     core.info(JSON.stringify(projects));
