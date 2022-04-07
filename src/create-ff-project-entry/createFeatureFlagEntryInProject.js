@@ -7,7 +7,7 @@ const getAndParsePullRequestDescriptionForFeatureFlag = () => {
   if (pullRequest === undefined || pullRequest?.body === undefined) {
     throw new Error('This action should only be run with Pull Request Events');
   }
-core.info('FF in description', pullRequest.body);
+core.info('FF in description', JSON.stringify(pullRequest.body));
 if(pullRequest.body.indexOf('temp_web_enabled_') > 0) {
   core.info('FF in description', pullRequest.body);
 }
