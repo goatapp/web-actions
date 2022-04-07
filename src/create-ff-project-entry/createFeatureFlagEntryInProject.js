@@ -29,8 +29,11 @@ const createFeatureFlagEntryInProject = () => {
     // });
 
     // core.exportVariable('author', commit.data.commit.author.email)
-    core.info(`${github.context.issue.number} ${assignee}, ${github.context.repo.repo}`)
-    core.info(`Adding to Project, Feature Flag: ${featureFlag}`);
+    const myToken = core.getInput('token');
+    core.info(`${github.context.issue.number} ${assignee}, ${github.context.repo.repo}`, featureFlag);
+    core.info(`Adding to Project, Feature Flag: ${featureFlag}, ${myToken}`);
+    const octokit = github.getOctokit(myToken)
+  
   } catch (error) {
     core.setFailed(error?.message);
   }
