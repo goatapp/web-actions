@@ -1,6 +1,10 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
+function isCharacterALetter(char) {
+  return (/[a-zA-Z]/).test(char)
+}
+
 const getAndParsePullRequestDescriptionForFeatureFlag = () => {
   const { pull_request: pullRequest } = github.context.payload;
   core.debug(`Pull Request: ${JSON.stringify(pullRequest)}`);
@@ -9,8 +13,19 @@ const getAndParsePullRequestDescriptionForFeatureFlag = () => {
   }
 
   const body = JSON.stringify(pullRequest.body);
-  if(body.indexOf('temp_web_enable_') > 0) {
-    return { assignee: pullRequest.user.login , featureFlag: body };
+  const indexOfFeatureFlag = body.indexOf('temp_web_enable_');
+  if(indexOfFeatureFlag > 0) {
+    const subStringOfPRDescription = body.subString(indexOfFeatureFlag);
+    let count = 0;
+    let currentChar = subStringOfPRDescription[count];
+    let featureFlag = '';
+
+    while(isCharacterALetter(currentChar) || currentChar === '_') {
+      featureFlag += currentChar;
+      ++count;
+      currentChar[count];
+    }
+    return { assignee: pullRequest.user.login , featureFlag };
   }
 
   return null;
