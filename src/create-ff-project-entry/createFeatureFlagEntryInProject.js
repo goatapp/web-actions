@@ -23,7 +23,7 @@ const getAndParsePullRequestDescriptionForFeatureFlag = () => {
     while(isCharacterALetter(currentChar) || currentChar === '_') {
       featureFlag += currentChar;
       ++count;
-      currentChar[count];
+      currentChar = subStringOfPRDescription[count];
     }
     return { assignee: pullRequest.user.login , featureFlag };
   }
