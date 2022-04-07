@@ -27,9 +27,9 @@ const createFeatureFlagEntryInProject = () => {
       repo: context.repo.repo,
       labels: ['Temporary Feature Flag']
     });
-    
-    core.exportVariable('author', commit.data.commit.author.email)
 
+    core.exportVariable('author', commit.data.commit.author.email)
+    core.info(`${context.issue.number} ${assignee}, ${context.repo.repo}`)
     core.info(`Adding to Project, Feature Flag: ${featureFlagName}`);
   } catch (error) {
     core.setFailed(error?.message);
