@@ -7,7 +7,9 @@ const getAndParsePullRequestDescriptionForFeatureFlag = () => {
   if (pullRequest === undefined || pullRequest?.body === undefined) {
     throw new Error('This action should only be run with Pull Request Events');
   }
-  return pullRequest.body;
+
+
+  return 'temp_web_enable_test_ff';
 };
 
 const createFeatureFlagEntryInProject = () => {
