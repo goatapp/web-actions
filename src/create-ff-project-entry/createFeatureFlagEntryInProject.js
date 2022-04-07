@@ -29,7 +29,7 @@ const createFeatureFlagEntryInProject = () => {
     // });
 
     // core.exportVariable('author', commit.data.commit.author.email)
-    core.info(`${context.issue.number} ${assignee}, ${context.repo.repo}`)
+    core.info(`${github.context.issue.number} ${assignee}, ${github.context.repo.repo}`)
     core.info(`Adding to Project, Feature Flag: ${featureFlag}`);
   } catch (error) {
     core.setFailed(error?.message);
