@@ -32,7 +32,7 @@ const createFeatureFlagEntryInProject = () => {
     const myToken = core.getInput('token');
     core.info(`${github.context.issue.number} ${assignee}, ${github.context.repo.repo}`, featureFlag);
     core.info(`Adding to Project, Feature Flag: ${featureFlag}, ${myToken}`);
-    const octokit = github.getOctokit(myToken)
+    // const octokit = github.getOctokit(myToken)
   
   } catch (error) {
     core.setFailed(error?.message);
