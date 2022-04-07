@@ -8,11 +8,12 @@ const getAndParsePullRequestDescriptionForFeatureFlag = () => {
     throw new Error('This action should only be run with Pull Request Events');
   }
 
-if(pullRequest.body.indexOf('temp_web_enabled_') > 0) {
-  core.info('FF in description', pullRequest.body);
-}
+  const body = JSON.stringify(pullRequest.body);
+  if(body.indexOf('temp_web_enable_') > 0) {
+    return { assignee: pullRequest.user.login , featureFlag: body };
+  }
 
-  return { assignee: pullRequest.user.login , featureFlag: pullRequest };
+  return null;
 };
 
 const createFeatureFlagEntryInProject = async () => {
@@ -20,6 +21,11 @@ const createFeatureFlagEntryInProject = async () => {
     core.debug('Starting PR Description Check for New FF');
 
     const {assignee, featureFlag} = getAndParsePullRequestDescriptionForFeatureFlag() || {};
+
+    if(!assignee === undefined || !assignee) {
+      core.info(`No new Temporary FF Added To This PR`);
+      return;
+    }
 
     core.debug(featureFlag);
 
