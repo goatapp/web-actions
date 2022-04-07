@@ -26,7 +26,7 @@ const createFeatureFlagEntryInProject = async () => {
     const myToken = core.getInput('token');
     const octokit = github.getOctokit(myToken);
 
-    core.info(`${github.context.issue.number} ${assignee}, ${github.context.repo.repo}`, featureFlag);
+    core.info(`${github.context.issue.number} ${assignee}, ${github.context.repo.repo}`, JSON.stringify(featureFlag));
     core.info(`Adding to Project, Feature Flag: ${featureFlag}, ${myToken}`);
 
 
