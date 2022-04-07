@@ -15,7 +15,7 @@ const getAndParsePullRequestDescriptionForFeatureFlag = () => {
   const body = JSON.stringify(pullRequest.body);
   const indexOfFeatureFlag = body.indexOf('temp_web_enable_');
   if(indexOfFeatureFlag > 0) {
-    const subStringOfPRDescription = body.subString(indexOfFeatureFlag);
+    const subStringOfPRDescription = body.substring(indexOfFeatureFlag);
     let count = 0;
     let currentChar = subStringOfPRDescription[count];
     let featureFlag = '';
