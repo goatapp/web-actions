@@ -10,16 +10,25 @@ const getAndParsePullRequestDescriptionForFeatureFlag = () => {
   }
 
 
-  return 'temp_web_enable_test_ff';
+  return {assignee: pullRequest.user.login , featureFlag: 'temp_web_enable_test_ff'};
 };
 
 const createFeatureFlagEntryInProject = () => {
   try {
     core.debug('Starting PR Description Check for New FF');
 
-    const featureFlagName = getAndParsePullRequestDescriptionForFeatureFlag();
+    const {assignee, featureFlag} = getAndParsePullRequestDescriptionForFeatureFlag() || {};
 
     core.debug(featureFlagName);
+
+    github.rest.issues.addLabels({
+      issue_number: context.issue.number,
+      owner: assignee,
+      repo: context.repo.repo,
+      labels: ['Temporary Feature Flag']
+    });
+    
+    core.exportVariable('author', commit.data.commit.author.email)
 
     core.info(`Adding to Project, Feature Flag: ${featureFlagName}`);
   } catch (error) {
