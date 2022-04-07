@@ -19,7 +19,7 @@ const createFeatureFlagEntryInProject = () => {
 
     const {assignee, featureFlag} = getAndParsePullRequestDescriptionForFeatureFlag() || {};
 
-    core.debug(featureFlagName);
+    core.debug(featureFlag);
 
     github.rest.issues.addLabels({
       issue_number: context.issue.number,
@@ -30,7 +30,7 @@ const createFeatureFlagEntryInProject = () => {
 
     core.exportVariable('author', commit.data.commit.author.email)
     core.info(`${context.issue.number} ${assignee}, ${context.repo.repo}`)
-    core.info(`Adding to Project, Feature Flag: ${featureFlagName}`);
+    core.info(`Adding to Project, Feature Flag: ${featureFlag}`);
   } catch (error) {
     core.setFailed(error?.message);
   }
