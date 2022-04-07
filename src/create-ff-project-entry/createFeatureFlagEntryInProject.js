@@ -12,7 +12,7 @@ const getAndParsePullRequestDescriptionForFeatureFlag = () => {
   return {assignee: pullRequest.user.login , featureFlag: 'temp_web_enable_test_ff'};
 };
 
-const createFeatureFlagEntryInProject = () => {
+const createFeatureFlagEntryInProject = async () => {
   try {
     core.debug('Starting PR Description Check for New FF');
 
@@ -20,19 +20,21 @@ const createFeatureFlagEntryInProject = () => {
 
     core.debug(featureFlag);
 
-    // github.rest.issues.addLabels({
-    //   issue_number: context.issue.number,
-    //   owner: assignee,
-    //   repo: context.repo.repo,
-    //   title: featureFlag,
-    //   labels: ['Temporary Feature Flag']
-    // });
-
-    // core.exportVariable('author', commit.data.commit.author.email)
     const myToken = core.getInput('token');
+    const octokit = github.getOctokit(myToken);
+
     core.info(`${github.context.issue.number} ${assignee}, ${github.context.repo.repo}`, featureFlag);
     core.info(`Adding to Project, Feature Flag: ${featureFlag}, ${myToken}`);
-    // const octokit = github.getOctokit(myToken)
+
+
+    const context = github.context;
+
+    const newIssue = await octokit.rest.issues.create({
+      ...context.repo,
+      assignee: assignee,
+      title: featureFlag,
+      body: featureFlag,
+    });
   
   } catch (error) {
     core.setFailed(error?.message);
