@@ -66,7 +66,7 @@ const createFeatureFlagEntryInProject = async () => {
     const project = await octokit.graphql(`{
       organization(login: "goatapp"){
         name
-        projectNext(number: ${JSON.stringify(projectIdNumber)}) {
+        projectNext(number: ${parseInt(projectIdNumber)}) {
           id
         }
       }
