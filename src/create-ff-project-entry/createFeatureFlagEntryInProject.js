@@ -92,7 +92,7 @@ const createFeatureFlagEntryInProject = async () => {
     if(newIssue) {
       await octokit.graphql(`{
           mutation {
-            addProjectNextItem(input: {projectId: "${p3.organization.projectNext.id}" contentId: "${newIssue.data.node_id}"}) {
+            addProjectNextItem(input: {projectId: ${p3.organization.projectNext.id} contentId: ${newIssue.data.node_id}}) {
               projectNextItem {
                 id
               }
