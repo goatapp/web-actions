@@ -99,7 +99,7 @@ const createFeatureFlagEntryInProject = async () => {
       }`;
        const projectFields = await octokit.graphql(projectFieldsdQuery);
        const hey = JSON.stringify(projectFields);
-      core.info(`FIELDS: ${hey.nodes}`);
+      core.info(`FIELDS: ${hey.node}`);
       core.info(getFieldFromProject(nodes));
 
     // if(newIssue) {
