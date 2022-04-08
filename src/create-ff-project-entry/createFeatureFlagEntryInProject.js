@@ -97,9 +97,9 @@ const createFeatureFlagEntryInProject = async () => {
           }
         }
       }`;
-       const projectFields = await octokit.graphql(projectFieldsdQuery);
+      const projectFields = await octokit.graphql(projectFieldsdQuery);
       core.info(`FIELDS: ${projectFields.node.fields.nodes}`);
-      core.info(getFieldFromProject(projectFields.node.fields.nodes));
+      core.info(getFieldFromProject('Date Added', projectFields.node.fields.nodes));
 
     // if(newIssue) {
       // await octokit.graphql(query);
