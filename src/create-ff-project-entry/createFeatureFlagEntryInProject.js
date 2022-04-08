@@ -89,16 +89,14 @@ const createFeatureFlagEntryInProject = async () => {
       title: featureFlag,
     });
 
-    if(newIssue) {
-      await octokit.graphql({
-          mutation: `{
-            addProjectNextItem(input: {projectId: ${p3.organization.projectNext.id} contentId: ${newIssue.data.node_id}}) {
+     const query = `addProjectNextItem(input: {projectId: ${p3.organization.projectNext.id} contentId: ${newIssue.data.node_id}}) {
               projectNextItem {
                 id
               }
-            }
-          }`
-      });
+            }`;
+
+    if(newIssue) {
+      await octokit.graphql(query);
     }
 
     core.info(JSON.stringify(newIssue));
