@@ -110,7 +110,7 @@ const createFeatureFlagEntryInProject = async () => {
       await octokit.graphql(updateDateFieldQuery);
 
       const updateFeatureAreaFieldQuery = buildFieldQuery(JSON.stringify(project.organization.projectNext.id), JSON.stringify(newProjectRow.addProjectNextItem.projectNextItem.id), JSON.stringify(featureAreaField.id));
-      const updateStatusQuery = buildFieldQuery(JSON.stringify(project.organization.projectNext.id), "f75ad846");
+      const updateStatusQuery = buildFieldQuery(JSON.stringify(project.organization.projectNext.id), JSON.stringify(newProjectRow.addProjectNextItem.projectNextItem.id), "f75ad846");
     
 
       await octokit.graphql(updateDateFieldQuery);
