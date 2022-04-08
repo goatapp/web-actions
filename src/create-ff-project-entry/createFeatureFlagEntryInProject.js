@@ -73,13 +73,14 @@ const createFeatureFlagEntryInProject = async () => {
       name
       projectNext(number: 8) {
         id
+        contentId
       }
     }
-  }`)
+  }`);
 
     core.info(`Status: ${JSON.stringify(projects.status)}, Project URL ${JSON.stringify(projects.url)}, Project Data: ${JSON.stringify(projects.data)}`);
     core.info(`Status: ${JSON.stringify(p2.status)}, Project URL ${JSON.stringify(p2.url)}, Project Data: ${JSON.stringify(p2.data)}`);
-     core.info(`GraphQl: ${JSON.stringify(p3)}`);
+    core.info(`GraphQl: ${JSON.stringify(p3)}`);
 
     // const newIssue = await octokit.rest.issues.create({
     //   ...context.repo,
