@@ -113,7 +113,7 @@ const createFeatureFlagEntryInProject = async () => {
         projectId: ${JSON.stringify(project.organization.projectNext.id)}
         itemId: ${newProjectRow.addProjectNextItem.projectNextItem.id}
         fieldId: ${dateField.id}
-        value: "April 8, 2022"
+        value: "2022-04-08"
       }
     ) {
       projectNextItem {
