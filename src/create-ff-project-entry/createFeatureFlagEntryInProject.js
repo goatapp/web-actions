@@ -1,6 +1,8 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
+const { getFieldFromProject } = require('./utils');
+
 function isCharacterALetter(char) {
   return (/[a-zA-Z]/).test(char)
 }
@@ -97,6 +99,8 @@ const createFeatureFlagEntryInProject = async () => {
       }`;
        const projectFields = await octokit.graphql(projectFieldsdQuery);
       core.info(`FIELDS: ${JSON.stringify(projectFields)}`);
+      const {node: {fields: { nodes }}} = JSON.stringify(projectFields);
+      core.info(getFieldFromProject(nodes));
 
     // if(newIssue) {
       // await octokit.graphql(query);
