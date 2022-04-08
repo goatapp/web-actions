@@ -71,16 +71,16 @@ const createFeatureFlagEntryInProject = async () => {
     //   labels: ['Temporary Feature Flag'],
     //   title: featureFlag,
     // });
-    core.info(`Issue Id: ${JSON.stringify(newIssue.data.node_id)}`);
+    // core.info(`Issue Id: ${JSON.stringify(newIssue.data.node_id)}`);
 
-    const query = `
-      mutation {
-        addProjectNextItem(input: {projectId: ${JSON.stringify(project.organization.projectNext.id)} contentId: ${JSON.stringify(newIssue.data.node_id)}}) {
-          projectNextItem {
-            id
-          }
-        }
-      }`;
+    // const query = `
+    //   mutation {
+    //     addProjectNextItem(input: {projectId: ${JSON.stringify(project.organization.projectNext.id)} contentId: ${JSON.stringify(newIssue.data.node_id)}}) {
+    //       projectNextItem {
+    //         id
+    //       }
+    //     }
+    //   }`;
 
       const projectFieldsdQuery = `{
         node(id: ${JSON.stringify(project.organization.projectNext.id)}) {
