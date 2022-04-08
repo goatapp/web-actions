@@ -92,7 +92,7 @@ const createFeatureFlagEntryInProject = async () => {
 
     const query = `
       mutation {
-        addProjectNextItem(input: {projectId: "${JSON.stringify(p3.organization.projectNext.id)}" contentId: "${JSON.stringify(newIssue.data.node_id)}"}) {
+        addProjectNextItem(input: {projectId: ${JSON.stringify(p3.organization.projectNext.id)} contentId: ${JSON.stringify(newIssue.data.node_id)}}) {
           projectNextItem {
             id
           }
