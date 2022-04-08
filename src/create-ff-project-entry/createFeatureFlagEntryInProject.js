@@ -112,7 +112,7 @@ const createFeatureFlagEntryInProject = async () => {
     updateProjectNextItemField(
       input: {
         projectId: ${JSON.stringify(project.organization.projectNext.id)}
-        itemId: ${rowToUpdate.addProjectNextItem.projectNextItem.id}
+        itemId: ${rowToUpdate.projectNextItem.id}
         fieldId: ${dateField.id}
         value: "April 8, 2022"
       }
