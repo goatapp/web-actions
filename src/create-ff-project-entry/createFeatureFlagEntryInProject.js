@@ -69,15 +69,8 @@ const createFeatureFlagEntryInProject = async () => {
     });
 
     const p3 = await octokit.graphql(`{
-    organization(login: "goatapp") {
-      projectsNext(first: 20) {
-        nodes {
-          id
-          title
-        }
-      }
-    }
-  }}`)
+    organization(login: "goatapp")
+  }`)
 
     core.info(`Status: ${JSON.stringify(projects.status)}, Project URL ${JSON.stringify(projects.url)}, Project Data: ${JSON.stringify(projects.data)}`);
     core.info(`Status: ${JSON.stringify(p2)}, Project URL ${JSON.stringify(p2.url)}, Project Data: ${JSON.stringify(p2.data)}`);
