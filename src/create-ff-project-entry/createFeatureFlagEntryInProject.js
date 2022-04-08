@@ -90,11 +90,11 @@ const createFeatureFlagEntryInProject = async () => {
     });
     core.info(`Issue Id: ${JSON.stringify(newIssue.data.node_id)}`);
 
-     const query = `mutation(input: {projectId: ${JSON.stringify(p3.organization.projectNext.id)} contentId: ${JSON.stringify(newIssue.data.node_id)}}) {
+     const query = `{mutation(input: {projectId: ${JSON.stringify(p3.organization.projectNext.id)} contentId: ${JSON.stringify(newIssue.data.node_id)}}) {
               projectNextItem {
                 id
               }
-            }`;
+            }}`;
 
     if(newIssue) {
       await octokit.graphql(query);
