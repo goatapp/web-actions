@@ -56,13 +56,13 @@ const createFeatureFlagEntryInProject = async () => {
     const context = github.context;
 
     const project = await octokit.graphql(`{
-    organization(login: "goatapp"){
-      name
-      projectNext(number: 8) {
-        id
+      organization(login: "goatapp"){
+        name
+        projectNext(number: 8) {
+          id
+        }
       }
-    }
-  }`);
+    }`);
 
     core.info(`GraphQl: ${JSON.stringify(project.organization.projectNext.id)}`);
 
@@ -101,28 +101,45 @@ const createFeatureFlagEntryInProject = async () => {
     if(newIssue) {
       const projectFields = await octokit.graphql(projectFieldsdQuery);
       const dateField = getFieldFromProject('Date Added', projectFields.node.fields.nodes);
+      const featureAreaField = getFieldFromProject('Feature Area', projectFields.node.fields.nodes);
       core.info(`FIELDS: ${projectFields.node.fields.nodes}`);
       core.info(JSON.stringify(dateField));
+      core.info(JSON.stringify(featureAreaField));
       const newProjectRow = await octokit.graphql(query);
       core.info(`new row attr ${JSON.stringify(newProjectRow.addProjectNextItem)}`);
 
 
    const updateDateFieldQuery = `mutation {
-    updateProjectNextItemField(
-      input: {
-        projectId: ${JSON.stringify(project.organization.projectNext.id)}
-        itemId: ${JSON.stringify(newProjectRow.addProjectNextItem.projectNextItem.id)}
-        fieldId: ${JSON.stringify(dateField.id)}
-        value: "2022-4-8"
+      updateProjectNextItemField(
+        input: {
+          projectId: ${JSON.stringify(project.organization.projectNext.id)}
+          itemId: ${JSON.stringify(newProjectRow.addProjectNextItem.projectNextItem.id)}
+          fieldId: ${JSON.stringify(dateField.id)}
+          value: ${(new Date()).toISOString().split('T')[0]};
+        }
+      ) {
+        projectNextItem {
+          id
+        }
       }
-    ) {
-      projectNextItem {
-        id
-      }
-    }
-  }`;
+    }`;
 
     const updatedRow = await octokit.graphql(updateDateFieldQuery);
+
+    const updateFeatureAreaFieldQuery = `mutation {
+      updateProjectNextItemField(
+        input: {
+          projectId: ${JSON.stringify(project.organization.projectNext.id)}
+          itemId: ${JSON.stringify(newProjectRow.addProjectNextItem.projectNextItem.id)}
+          fieldId: ${JSON.stringify(featureAreaField.id)}
+          value: "Test Value";
+        }
+      ) {
+        projectNextItem {
+          id
+        }
+      }
+    }`;
 
     }
 
