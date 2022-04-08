@@ -90,7 +90,7 @@ const createFeatureFlagEntryInProject = async () => {
     });
     core.info(`Issue Id: ${JSON.stringify(newIssue.data.node_id)}`);
 
-     const query = `addProjectNextItem(input: {projectId: ${p3.organization.projectNext.id} contentId: ${newIssue.data.node_id}}) {
+     const query = `addProjectNextItem(input: {projectId: ${JSON.stringify(p3.organization.projectNext.id)} contentId: ${JSON.stringify(newIssue.data.node_id)}}) {
               projectNextItem {
                 id
               }
