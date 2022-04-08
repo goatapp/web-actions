@@ -98,7 +98,7 @@ const createFeatureFlagEntryInProject = async () => {
       core.info(`FIELDS: ${projectFields.node.fields.nodes}`);
       core.info(JSON.stringify(dateField));
       core.info(JSON.stringify(featureAreaField));
-      core.info(`${statusField.settings}`);
+      core.info(`${statusField.settings.options}`);
 
       const newProjectRow = await octokit.graphql(query);
       const today = (new Date()).toISOString().split('T')[0];
