@@ -84,21 +84,6 @@ const createFeatureFlagEntryInProject = async () => {
         }
       }`;
 
-  //   const updateDateFieldQuery = `mutation {
-  //   updateProjectNextItemField(
-  //     input: {
-  //       projectId: ${JSON.stringify(project.organization.projectNext.id)}
-  //       itemId: "ITEM_ID"
-  //       fieldId: "FIELD_ID"
-  //       value: "2021-5-11"
-  //     }
-  //   ) {
-  //     projectNextItem {
-  //       id
-  //     }
-  //   }
-  // };`
-
       const projectFieldsdQuery = `{
         node(id: ${JSON.stringify(project.organization.projectNext.id)}) {
           ... on ProjectNext {
@@ -112,18 +97,33 @@ const createFeatureFlagEntryInProject = async () => {
           }
         }
       }`;
-      const projectFields = await octokit.graphql(projectFieldsdQuery);
-      const dateField = getFieldFromProject('Date Added', projectFields.node.fields.nodes);
-
-
-
-      
-      core.info(`FIELDS: ${projectFields.node.fields.nodes}`);
-      core.info(getFieldFromProject('Date Added', projectFields.node.fields.nodes));
 
     if(newIssue) {
+      const projectFields = await octokit.graphql(projectFieldsdQuery);
+      const dateField = getFieldFromProject('Date Added', projectFields.node.fields.nodes);
+      core.info(`FIELDS: ${projectFields.node.fields.nodes}`);
+      core.info(getFieldFromProject('Date Added', projectFields.node.fields.nodes));
       const newProjectRow = await octokit.graphql(query);
-      core.info(`new row attr ${newProjectRow}`)
+      core.info(`new row attr ${newProjectRow}`);
+
+
+   const updateDateFieldQuery = `mutation {
+    updateProjectNextItemField(
+      input: {
+        projectId: ${JSON.stringify(project.organization.projectNext.id)}
+        itemId: ${newProjectRow.data.node_id}
+        fieldId: ${dateField.id}
+        value: "April 8, 2022"
+      }
+    ) {
+      projectNextItem {
+        id
+      }
+    }
+  };`
+
+    const updatedRow = await octokit.graphql(updateDateFieldQuery);
+
     }
 
     core.info(JSON.stringify(newIssue));
