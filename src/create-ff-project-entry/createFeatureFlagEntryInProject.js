@@ -102,7 +102,7 @@ const createFeatureFlagEntryInProject = async () => {
       const projectFields = await octokit.graphql(projectFieldsdQuery);
       const dateField = getFieldFromProject('Date Added', projectFields.node.fields.nodes);
       core.info(`FIELDS: ${projectFields.node.fields.nodes}`);
-      core.info(dateField.data.node_id);
+      core.info(JSON.stringify(dateField));
       const newProjectRow = await octokit.graphql(query);
       core.info(`new row attr ${newProjectRow}`);
 
