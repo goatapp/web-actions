@@ -57,7 +57,7 @@ const createFeatureFlagEntryInProject = async () => {
       headers: {
         authorization: `token ${myToken}`,
       },
-      org: 'GOAT',
+      org: github.context.repo.owner,
     });
 
    const p2 =  await octokit.rest.projects.listForRepo({
@@ -69,10 +69,10 @@ const createFeatureFlagEntryInProject = async () => {
     });
 
     const p3 = await octokit.graphql(`{
-    organization(login: "goatapp") {
+    organization(login: "goatapp"){
       name
     }
-  }}`)
+  }`)
 
     core.info(`Status: ${JSON.stringify(projects.status)}, Project URL ${JSON.stringify(projects.url)}, Project Data: ${JSON.stringify(projects.data)}`);
     core.info(`Status: ${JSON.stringify(p2)}, Project URL ${JSON.stringify(p2.url)}, Project Data: ${JSON.stringify(p2.data)}`);
