@@ -53,12 +53,11 @@ const createFeatureFlagEntryInProject = async () => {
 
     const context = github.context;
 
-    const projects =  await octokit.request('GET /repos/{owner}/{repo}/projects', {
+    const projects =  await octokit.request('GET /orgs/{org}/projects', {
       headers: {
         authorization: `token ${myToken}`,
       },
-      owner: github.context.repo.owner,
-      repo: github.context.repo.repo,
+      org: github.context.repo.owner,
     });
 
     core.info(`Project URL ${JSON.stringify(projects.url)}, Project Data: ${JSON.stringify(projects.data)}`);
