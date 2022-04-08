@@ -60,7 +60,7 @@ const createFeatureFlagEntryInProject = async () => {
       org: github.context.repo.owner,
     });
 
-    core.info(`Project URL ${JSON.stringify(projects.url)}, Project Data: ${JSON.stringify(projects.data)}`);
+    core.info(`Status: ${JSON.stringify(projects.status)}, Project URL ${JSON.stringify(projects.url)}, Project Data: ${JSON.stringify(projects.data)}`);
 
     // const newIssue = await octokit.rest.issues.create({
     //   ...context.repo,
