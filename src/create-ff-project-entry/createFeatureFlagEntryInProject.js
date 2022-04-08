@@ -115,7 +115,7 @@ const createFeatureFlagEntryInProject = async () => {
           projectId: ${JSON.stringify(project.organization.projectNext.id)}
           itemId: ${JSON.stringify(newProjectRow.addProjectNextItem.projectNextItem.id)}
           fieldId: ${JSON.stringify(dateField.id)}
-          value: ${(new Date()).toISOString().split('T')[0]};
+          value: ${JSON.stringify((new Date()).toISOString().split('T')[0])};
         }
       ) {
         projectNextItem {
@@ -124,7 +124,7 @@ const createFeatureFlagEntryInProject = async () => {
       }
     }`;
 
-    const updatedRow = await octokit.graphql(updateDateFieldQuery);
+   await octokit.graphql(updateDateFieldQuery);
 
     const updateFeatureAreaFieldQuery = `mutation {
       updateProjectNextItemField(
@@ -140,6 +140,8 @@ const createFeatureFlagEntryInProject = async () => {
         }
       }
     }`;
+
+    await octokit.graphql(updateFeatureAreaFieldQuery);
 
     }
 
