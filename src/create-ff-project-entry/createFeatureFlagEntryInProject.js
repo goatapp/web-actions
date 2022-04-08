@@ -59,6 +59,7 @@ const createFeatureFlagEntryInProject = async () => {
 
     core.info(`${github.context.issue.number} ${assignee}, ${github.context.repo.repo}`, JSON.stringify(featureFlag));
     core.info(`Adding to Project, Feature Flag: ${JSON.stringify(featureFlag)}, ${myToken}`);
+    core.info(`Project ID Number: ${projectIdNumber}`);
 
 
     const context = github.context;
