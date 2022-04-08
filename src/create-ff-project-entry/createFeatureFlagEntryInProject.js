@@ -79,7 +79,7 @@ const createFeatureFlagEntryInProject = async () => {
 
     core.info(`Status: ${JSON.stringify(projects.status)}, Project URL ${JSON.stringify(projects.url)}, Project Data: ${JSON.stringify(projects.data)}`);
     core.info(`Status: ${JSON.stringify(p2.status)}, Project URL ${JSON.stringify(p2.url)}, Project Data: ${JSON.stringify(p2.data)}`);
-    core.info(`GraphQl: ${JSON.stringify(p3)}`);
+    core.info(`GraphQl: ${JSON.stringify(p3.organization.projectNext.id)}`);
 
     const newIssue = await octokit.rest.issues.create({
       ...context.repo,
@@ -88,6 +88,7 @@ const createFeatureFlagEntryInProject = async () => {
       labels: ['Temporary Feature Flag'],
       title: featureFlag,
     });
+    core.info(`Issue Id: ${JSON.stringify(newIssue.data.node_id)}`);
 
      const query = `addProjectNextItem(input: {projectId: ${p3.organization.projectNext.id} contentId: ${newIssue.data.node_id}}) {
               projectNextItem {
