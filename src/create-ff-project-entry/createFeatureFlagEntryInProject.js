@@ -53,22 +53,7 @@ const createFeatureFlagEntryInProject = async () => {
 
     const context = github.context;
 
-    const projects =  await octokit.request('GET /orgs/{org}/projects', {
-      headers: {
-        authorization: `token ${myToken}`,
-      },
-      org: github.context.repo.owner,
-    });
-
-   const p2 =  await octokit.rest.projects.listForRepo({
-     headers: {
-        authorization: `token ${myToken}`,
-      },
-      owner: github.context.repo.owner,
-      repo: github.context.repo.repo
-    });
-
-    const p3 = await octokit.graphql(`{
+    const project = await octokit.graphql(`{
     organization(login: "goatapp"){
       name
       projectNext(number: 8) {
@@ -77,9 +62,7 @@ const createFeatureFlagEntryInProject = async () => {
     }
   }`);
 
-    core.info(`Status: ${JSON.stringify(projects.status)}, Project URL ${JSON.stringify(projects.url)}, Project Data: ${JSON.stringify(projects.data)}`);
-    core.info(`Status: ${JSON.stringify(p2.status)}, Project URL ${JSON.stringify(p2.url)}, Project Data: ${JSON.stringify(p2.data)}`);
-    core.info(`GraphQl: ${JSON.stringify(p3.organization.projectNext.id)}`);
+    core.info(`GraphQl: ${JSON.stringify(project.organization.projectNext.id)}`);
 
     const newIssue = await octokit.rest.issues.create({
       ...context.repo,
@@ -92,15 +75,31 @@ const createFeatureFlagEntryInProject = async () => {
 
     const query = `
       mutation {
-        addProjectNextItem(input: {projectId: ${JSON.stringify(p3.organization.projectNext.id)} contentId: ${JSON.stringify(newIssue.data.node_id)}}) {
+        addProjectNextItem(input: {projectId: ${JSON.stringify(project.organization.projectNext.id)} contentId: ${JSON.stringify(newIssue.data.node_id)}}) {
           projectNextItem {
             id
           }
         }
       }`;
 
+      const projectFieldsdQuery = `{
+        node(id: ${JSON.stringify(project.organization.projectNext.id)}) {
+          ... on ProjectNext {
+            fields(first: 20) {
+              nodes {
+                id
+                name
+                settings
+              }
+            }
+          }
+        }
+      }`;
+
     if(newIssue) {
       await octokit.graphql(query);
+      const projectFields = await octokit.graphql(projectFieldsdQuery);
+      core.info(`FIELDS: ${projectFields}`);
     }
 
     core.info(JSON.stringify(newIssue));
