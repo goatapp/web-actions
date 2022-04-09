@@ -8,11 +8,15 @@ flag will be added to the table, with a status, date, and feature area and an is
 
 ### `namingConvention`
 
-**Required** The name substring that all the matching feature flags contain. Default `"temp_web_enable_"`.
+The name substring that all the matching feature flags contain. Default `"temp_web_enable_"`.
 
 ### `projectIdNumber`
 
 **Required** This can be found in the url of your project example url: https://github.com/orgs/goatapp/projects/8/views/1 Project ID Number `8`.
+
+### `projectItemLabel`
+
+The name of the github label you want added to the issue created for the table. Default `"Temporary Feature Flag"`.
 
 ### `myToken`
 
