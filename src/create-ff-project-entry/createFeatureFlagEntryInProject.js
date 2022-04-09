@@ -67,7 +67,7 @@ const createFeatureFlagEntryInProject = async () => {
 
     const isFeatureFlagExisting = await octokit.graphql(`{search(
     type:ISSUE, 
-    query: "repo:"goat-web",
+    query: "repo:goat-web",
     last: 100
   ) {
     repos: edges {
