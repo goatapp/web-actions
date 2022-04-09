@@ -45,7 +45,10 @@ const buildProjectFieldsdQuery = (projectItemId) => {
                 id
                 name
                 settings(first: 10) {
-                    options
+                    options {
+                        id
+                        name
+                    }
                 }
               }
             }
