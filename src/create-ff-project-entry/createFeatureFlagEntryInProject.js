@@ -65,13 +65,22 @@ const createFeatureFlagEntryInProject = async () => {
       }
     }`);
 
-    const isFeatureFlagExisting = await octokit.request('GET /search/issues?q={issueTitle}+in:title+repo:{repo}', {
-      headers: {
-        authorization: `token ${myToken}`,
-      },
-      issueTitle: featureFlag,
-      repo: github.context.repo.repo,
-    });
+    const isFeatureFlagExisting = await octokit.graphql(`search(
+    type:ISSUE, 
+    last: 100
+  ) {
+    repos: edges {
+      repo: node {
+        ... on Repository {
+          url
+
+          allIssues: issues {
+            totalCount
+          }
+        }
+      }
+    }
+  }`)
 
     core.info(JSON.stringify(isFeatureFlagExisting));
 
