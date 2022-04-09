@@ -29,6 +29,7 @@ uses: ./src/create-ff-project-entry
 with:
   namingConvention: temp_web_enable_
   projectIdNumber: '8'
+  projectItemLabel: 'Temporary Feature Flag'
   token: '${{ secrets.NPM_TOKEN }}'
   gitToken: '${{ secrets.GITHUB_TOKEN }}'
 ```
