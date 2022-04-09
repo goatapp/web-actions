@@ -16,6 +16,7 @@ const getAndParsePullRequestDescriptionForFeatureFlagAndFeatureArea = () => {
   const body = JSON.stringify(pullRequest.body);
   const indexOfFeatureFlag = body.indexOf(namingConvention);
   const splitDescriptionOnFeatureAreaTag = body.split('[FEATURE AREA]');
+  core.info(splitDescriptionOnFeatureAreaTag)
 
   if(indexOfFeatureFlag > 0) {
     const subStringOfPRDescription = body.substring(indexOfFeatureFlag);
