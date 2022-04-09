@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-const { buildFieldQuery, buildAddItemToProjectQuery, buildProjectFieldsdQuery, getFieldFromProject } = require('./utils');
+const { buildFieldQuery, buildAddItemToProjectQuery, buildProjectFieldsdQuery, getFieldFromProject, getOptionIdFromFieldOptions } = require('./utils');
 
 function isCharacterALetter(char) {
   return (/[a-zA-Z]/).test(char)
@@ -93,6 +93,7 @@ const createFeatureFlagEntryInProject = async () => {
       const dateField = getFieldFromProject('Date Added', projectFields.node.fields.nodes);
       const featureAreaField = getFieldFromProject('Feature Area', projectFields.node.fields.nodes);
       const statusField = getFieldFromProject('Status', projectFields.node.fields.nodes);
+      const statusOption = getOptionIdFromFieldOptions(JSON.parse(statusField.setting))
 
       core.info(`FIELDS: ${projectFields.node.fields.nodes}`);
       core.info(JSON.stringify(dateField));

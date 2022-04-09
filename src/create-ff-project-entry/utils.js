@@ -3,7 +3,8 @@ const getFieldFromProject = (fieldName, fields) => {
     return result;
 }
 
-const getOptionIdFromFieldOptions = (options) => {
+const getOptionIdFromFieldOptions = (settings) => {
+    const { options } = settings;
     const result = options.find( ({ name }) => name === 'Created' );
     return result;
 }
@@ -44,12 +45,7 @@ const buildProjectFieldsdQuery = (projectItemId) => {
               nodes {
                 id
                 name
-                settings(first: 10) {
-                    options {
-                        id
-                        name
-                    }
-                }
+                settings
               }
             }
           }
