@@ -65,7 +65,7 @@ const createFeatureFlagEntryInProject = async () => {
       }
     }`);
 
-    const isFeatureFlagExisting = await octokit.graphql(`search(
+    const isFeatureFlagExisting = await octokit.graphql(`{search(
     type:ISSUE, 
     last: 100
   ) {
@@ -80,7 +80,7 @@ const createFeatureFlagEntryInProject = async () => {
         }
       }
     }
-  }`)
+  }}`)
 
     core.info(JSON.stringify(isFeatureFlagExisting));
 
