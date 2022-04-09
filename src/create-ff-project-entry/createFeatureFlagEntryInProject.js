@@ -66,7 +66,7 @@ const createFeatureFlagEntryInProject = async () => {
     }`);
 
     const isFeatureFlagExisting = await octokit.graphql(`{
-      organization(login: "goatapp"){
+      repository(name: ${context.repo.repo}, owner:  ${context.repo.owner})
         name
         issue(name: ${featureFlag}) {
           id
