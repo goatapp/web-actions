@@ -12,6 +12,7 @@ const getAndParsePullRequestDescriptionForFeatureFlagAndFeatureArea = () => {
 
   const namingConvention = core.getInput('namingConvention') || 'temp_web_enable_' ;
   const body = JSON.stringify(pullRequest.body);
+  core.info(body);
   const indexOfFeatureFlag = body.indexOf(namingConvention);
   const splitDescriptionOnFeatureAreaTag = body.split('[FEATURE AREA]');
 
