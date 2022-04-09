@@ -38,7 +38,7 @@ const createFeatureFlagEntryInProject = async () => {
   try {
     core.info('Starting PR Description Check for New FF');
 
-    const { assignee, featureFlag, featureArea } = getAndParsePullRequestDescriptionForFeatureFlag() || {};
+    const { assignee, featureFlag, featureArea } = getAndParsePullRequestDescriptionForFeatureFlagAndFeatureArea() || {};
 
     if(!assignee === undefined || !assignee) {
       core.info(`No new Temporary FF Added To This PR`);
