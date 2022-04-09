@@ -93,7 +93,7 @@ const createFeatureFlagEntryInProject = async () => {
       const dateField = getFieldFromProject('Date Added', projectFields.node.fields.nodes);
       const featureAreaField = getFieldFromProject('Feature Area', projectFields.node.fields.nodes);
       const statusField = getFieldFromProject('Status', projectFields.node.fields.nodes);
-      const statusOption = getOptionIdFromFieldOptions(statusField.setting)
+      const statusOption = getOptionIdFromFieldOptions(statusField.settings)
 
       core.info(`FIELDS: ${projectFields.node.fields.nodes}`);
       core.info(JSON.stringify(dateField));
