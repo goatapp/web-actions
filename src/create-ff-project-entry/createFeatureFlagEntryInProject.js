@@ -65,12 +65,17 @@ const createFeatureFlagEntryInProject = async () => {
       }
     }`);
 
-    const isFeatureFlagExisting = await octokit.rest.issues.get({
-      ...context.repo,
-      name: featureFlag,
+    const isFeatureFlagExisting = await octokit.request('GET /search/issues?q={issueTitle}+in:title+repo:{repo}', {
+      headers: {
+        authorization: `token ${myToken}`,
+      },
+      issueTitle: featureFlag,
+      repo: github.context.repo.repo,
     });
 
     core.info(JSON.stringify(isFeatureFlagExisting));
+
+    return;
 
     const newIssue = await octokit.rest.issues.create({
       ...context.repo,
