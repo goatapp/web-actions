@@ -57,7 +57,6 @@ const createFeatureFlagEntryInProject = async () => {
       return; 
     }
 
-    core.info(`${github.context.issue.number} ${assignee}, ${github.context.repo.repo}`, JSON.stringify(featureFlag));
     core.info(`Adding to Project, Feature Flag: ${JSON.stringify(featureFlag)}, ${myToken}`);
     core.info(`Project ID Number: ${projectIdNumber}`);
 
@@ -94,12 +93,13 @@ const createFeatureFlagEntryInProject = async () => {
       const dateField = getFieldFromProject('Date Added', projectFields.node.fields.nodes);
       const featureAreaField = getFieldFromProject('Feature Area', projectFields.node.fields.nodes);
       const statusField = getFieldFromProject('Status', projectFields.node.fields.nodes);
+      const status = JSON.parse(statusField.settings);
+      const options = JSON.parse(status.options);
 
-      const status = statusField.settings;
       core.info(`FIELDS: ${projectFields.node.fields.nodes}`);
       core.info(JSON.stringify(dateField));
       core.info(JSON.stringify(featureAreaField));
-      core.info(`${JSON.stringify(statusField)}`);
+      core.info(`${JSON.stringify(options)}`);
 
       const newProjectRow = await octokit.graphql(query);
       const today = (new Date()).toISOString().split('T')[0];
