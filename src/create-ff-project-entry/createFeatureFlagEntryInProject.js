@@ -85,9 +85,10 @@ const createFeatureFlagEntryInProject = async () => {
       }
     }`);
 
-    core.info(JSON.stringify(isFeatureFlagExisting));
-
-    return;
+   if(isFeatureFlagExisting.search.issueCount > 0) {
+      core.info(`This Feature Flag is already in the project`);
+      return;
+   }
 
     const newIssue = await octokit.rest.issues.create({
       ...context.repo,
