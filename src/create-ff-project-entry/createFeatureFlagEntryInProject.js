@@ -66,7 +66,7 @@ const createFeatureFlagEntryInProject = async () => {
     }`);
 
     const isFeatureFlagExisting = await octokit.graphql(`{
-      search(last: 100, type: ISSUE, query: "org:goatapp repo:goat-web state:open") {
+      search(first: 100, type: ISSUE, query: "org:goatapp repo:goat-web state:open") {
         issueCount
         pageInfo {
           hasNextPage
@@ -76,13 +76,16 @@ const createFeatureFlagEntryInProject = async () => {
           node {
             ... on Issue {
               title
+              repository {
+                name
+              }
             }
           }
         }
       }
     }`);
 
-    core.info(`${JSON.stringify(isFeatureFlagExisting)}`);
+    core.info(JSON.stringify(isFeatureFlagExisting));
 
     return;
 
