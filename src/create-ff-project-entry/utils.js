@@ -3,6 +3,11 @@ const getFieldFromProject = (fieldName, fields) => {
     return result;
 }
 
+const getOptionIdFromFieldOptions = (options) => {
+    const result = options.find( ({ name }) => name === 'Created' );
+    return result;
+}
+
 const buildFieldQuery = (projectId, itemId, fieldId, value) => {
     return `mutation {
       updateProjectNextItemField(
@@ -39,7 +44,9 @@ const buildProjectFieldsdQuery = (projectItemId) => {
               nodes {
                 id
                 name
-                settings
+                settings {
+                    options
+                }
               }
             }
           }
@@ -52,4 +59,5 @@ module.exports = {
     buildAddItemToProjectQuery,
     buildProjectFieldsdQuery,
     getFieldFromProject,
+    getOptionIdFromFieldOptions,
 }
