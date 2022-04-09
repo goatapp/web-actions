@@ -65,23 +65,27 @@ const createFeatureFlagEntryInProject = async () => {
       }
     }`);
 
-    const isFeatureFlagExisting = await octokit.graphql(`{search(
-    type:ISSUE, 
-    query: "repo:goat-web",
-    first: 100
-  ) {
-    repos: edges {
-      repo: node {
-        ... on Repository {
-          url
-
-          allIssues: issues {
-            totalCount
+    const isFeatureFlagExisting = await octokit.graphql(`{
+  search(first: 100, type: ISSUE, query: "user:will-stone state:open") {
+    issueCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        ... on Issue {
+          createdAt
+          title
+          url,
+          repository {
+            name
           }
         }
       }
     }
-  }}`)
+  }
+}`)
 
     core.info(JSON.stringify(isFeatureFlagExisting));
 
