@@ -66,7 +66,7 @@ const createFeatureFlagEntryInProject = async () => {
     }`);
 
     const isFeatureFlagExisting = await octokit.graphql(`{
-  search(first: 100, type: ISSUE, query: "org:goatapp state:open") {
+  search(first: 100, type: ISSUE, query: "org:goatapp state:open title:temp_web_enable_site_cutover_to_old_goat") {
     issueCount
     pageInfo {
       hasNextPage
