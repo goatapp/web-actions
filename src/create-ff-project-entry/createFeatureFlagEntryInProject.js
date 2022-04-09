@@ -1,13 +1,9 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-const { buildFieldQuery, buildAddItemToProjectQuery, buildProjectFieldsdQuery, getFieldFromProject, getOptionIdFromFieldOptions } = require('./utils');
+const { buildFieldQuery, buildAddItemToProjectQuery, buildProjectFieldsdQuery, getFieldFromProject, getOptionIdFromFieldOptions, isCharacterALetter } = require('./utils');
 
-function isCharacterALetter(char) {
-  return (/[a-zA-Z]/).test(char)
-}
-
-const getAndParsePullRequestDescriptionForFeatureFlag = () => {
+const getAndParsePullRequestDescriptionForFeatureFlagAndFeatureArea = () => {
   const { pull_request: pullRequest } = github.context.payload;
 
   core.debug(`Pull Request: ${JSON.stringify(pullRequest)}`);
@@ -19,6 +15,7 @@ const getAndParsePullRequestDescriptionForFeatureFlag = () => {
   const namingConvention = core.getInput('namingConvention') || 'temp_web_enable_' ;
   const body = JSON.stringify(pullRequest.body);
   const indexOfFeatureFlag = body.indexOf(namingConvention);
+  const splitDescriptionOnFeatureAreaTag = body.split('[FEATURE AREA]');
 
   if(indexOfFeatureFlag > 0) {
     const subStringOfPRDescription = body.substring(indexOfFeatureFlag);
@@ -31,7 +28,7 @@ const getAndParsePullRequestDescriptionForFeatureFlag = () => {
       ++count;
       currentChar = subStringOfPRDescription[count];
     }
-    return { assignee: pullRequest.user.login , featureFlag };
+    return { assignee: pullRequest.user.login , featureFlag, featureArea: splitDescriptionOnFeatureAreaTag[1] || 'N/A' };
   }
 
   return null;
@@ -41,7 +38,7 @@ const createFeatureFlagEntryInProject = async () => {
   try {
     core.info('Starting PR Description Check for New FF');
 
-    const { assignee, featureFlag } = getAndParsePullRequestDescriptionForFeatureFlag() || {};
+    const { assignee, featureFlag, featureArea } = getAndParsePullRequestDescriptionForFeatureFlag() || {};
 
     if(!assignee === undefined || !assignee) {
       core.info(`No new Temporary FF Added To This PR`);
@@ -104,12 +101,8 @@ const createFeatureFlagEntryInProject = async () => {
       const today = (new Date()).toISOString().split('T')[0];
 
       const updateDateFieldQuery = buildFieldQuery(JSON.stringify(project.organization.projectNext.id), JSON.stringify(newProjectRow.addProjectNextItem.projectNextItem.id), JSON.stringify(dateField.id), JSON.stringify(today));
-      const updateFeatureAreaFieldQuery = buildFieldQuery(JSON.stringify(project.organization.projectNext.id), JSON.stringify(newProjectRow.addProjectNextItem.projectNextItem.id), JSON.stringify(featureAreaField.id), JSON.stringify("Test Value"));
+      const updateFeatureAreaFieldQuery = buildFieldQuery(JSON.stringify(project.organization.projectNext.id), JSON.stringify(newProjectRow.addProjectNextItem.projectNextItem.id), JSON.stringify(featureAreaField.id), JSON.stringify(featureArea));
       const updateStatusQuery = buildFieldQuery(JSON.stringify(project.organization.projectNext.id), JSON.stringify(newProjectRow.addProjectNextItem.projectNextItem.id), JSON.stringify(statusField.id), JSON.stringify(statusOption.id));
-
-    core.info(`date: ${updateDateFieldQuery}`);
-    core.info(`feature: ${updateFeatureAreaFieldQuery}`);
-    core.info(`Status: ${updateStatusQuery}`);
 
       await octokit.graphql(updateDateFieldQuery);
       await octokit.graphql(updateFeatureAreaFieldQuery);

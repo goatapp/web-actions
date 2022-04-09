@@ -1,14 +1,3 @@
-const getFieldFromProject = (fieldName, fields) => {
-    const result = fields.find( ({ name }) => name === fieldName );
-    return result;
-}
-
-const getOptionIdFromFieldOptions = (settings) => {
-    const { options } = settings;
-    const result = options.find( ({ name }) => name === 'Created' );
-    return result;
-}
-
 const buildFieldQuery = (projectId, itemId, fieldId, value) => {
     return `mutation {
       updateProjectNextItemField(
@@ -53,10 +42,26 @@ const buildProjectFieldsdQuery = (projectItemId) => {
       }`;
 }
 
+const getFieldFromProject = (fieldName, fields) => {
+    const result = fields.find( ({ name }) => name === fieldName );
+    return result;
+}
+
+const getOptionIdFromFieldOptions = (settings) => {
+    const { options } = settings;
+    const result = options.find( ({ name }) => name === 'Created' );
+    return result;
+}
+
+function isCharacterALetter(char) {
+  return (/[a-zA-Z]/).test(char)
+}
+
 module.exports = {
     buildFieldQuery,
     buildAddItemToProjectQuery,
     buildProjectFieldsdQuery,
     getFieldFromProject,
     getOptionIdFromFieldOptions,
+    isCharacterALetter,
 }
