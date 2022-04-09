@@ -6,8 +6,6 @@ const { buildFieldQuery, buildAddItemToProjectQuery, buildProjectFieldsdQuery, g
 const getAndParsePullRequestDescriptionForFeatureFlagAndFeatureArea = () => {
   const { pull_request: pullRequest } = github.context.payload;
 
-  core.debug(`Pull Request: ${JSON.stringify(pullRequest)}`);
-
   if (pullRequest === undefined || pullRequest?.body === undefined) {
     throw new Error('This action should only be run with Pull Request Events');
   }
@@ -16,7 +14,6 @@ const getAndParsePullRequestDescriptionForFeatureFlagAndFeatureArea = () => {
   const body = JSON.stringify(pullRequest.body);
   const indexOfFeatureFlag = body.indexOf(namingConvention);
   const splitDescriptionOnFeatureAreaTag = body.split('[FEATURE AREA]');
-  core.info(splitDescriptionOnFeatureAreaTag)
 
   if(indexOfFeatureFlag > 0) {
     const subStringOfPRDescription = body.substring(indexOfFeatureFlag);
@@ -56,9 +53,6 @@ const createFeatureFlagEntryInProject = async () => {
     }
 
     core.info(`Adding to Project, Feature Flag: ${JSON.stringify(featureFlag)}, ${myToken}`);
-    core.info(`Project ID Number: ${projectIdNumber}`);
-    core.info(`Project ID Number: ${featureArea}`);
-
 
     const context = github.context;
 
@@ -71,7 +65,16 @@ const createFeatureFlagEntryInProject = async () => {
       }
     }`);
 
-    core.info(`GraphQl Response: ${JSON.stringify(project.organization.projectNext.id)}`);
+    const isFeatureFlagExisting = await octokit.graphql(`{
+      organization(login: "goatapp"){
+        name
+        issue(name: ${featureFlag}) {
+          id
+        }
+      }
+    }`);
+
+    core.info(JSON.stringify(isFeatureFlagExisting));
 
     const newIssue = await octokit.rest.issues.create({
       ...context.repo,
@@ -93,11 +96,6 @@ const createFeatureFlagEntryInProject = async () => {
       const featureAreaField = getFieldFromProject('Feature Area', projectFields.node.fields.nodes);
       const statusField = getFieldFromProject('Status', projectFields.node.fields.nodes);
       const statusOption = getOptionIdFromFieldOptions(JSON.parse(statusField.settings));
-
-      core.info(`FIELDS: ${projectFields.node.fields.nodes}`);
-      core.info(JSON.stringify(dateField));
-      core.info(JSON.stringify(featureAreaField));
-      core.info(`${JSON.stringify(statusOption)}`);
 
       const newProjectRow = await octokit.graphql(query);
       const today = (new Date()).toISOString().split('T')[0];
