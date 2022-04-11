@@ -20,7 +20,7 @@ The name of the github label you want added to the issue created for the table. 
 
 ### `myToken`
 
-**Required** This is the token used for accessing the repo and its issues as well as adding them your you will need read:org write:package and repo permissions on the token
+**Required** This is the token used for accessing the repo and its issues as well as adding them your you will need `read:org` `write:package` and `repo` permissions on the token
 
 ## Example usage
 
