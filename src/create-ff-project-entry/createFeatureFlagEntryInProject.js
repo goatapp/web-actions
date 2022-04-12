@@ -44,6 +44,11 @@ const createFeatureFlagEntryInProject = async () => {
       return;
     }
 
+    if(featureFlag == 'temp_web_enable_example_name') {
+      core.info(`No new Temporary FF Added To This PR`);
+      return;
+    }
+
     const myToken = core.getInput('token');
     const projectIdNumber = core.getInput('projectIdNumber');
     const octokit = github.getOctokit(myToken);
