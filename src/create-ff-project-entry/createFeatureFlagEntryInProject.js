@@ -10,24 +10,24 @@ const getAndParsePullRequestDescriptionForFeatureFlagAndFeatureArea = () => {
     throw new Error('This action should only be run with Pull Request Events');
   }
 
-  const namingConvention = core.getInput('namingConvention') || 'temp_web_enable_' ;
+  const namingConvention = core.getInput('namingConvention') || 'temp_web_enable_';
   const body = JSON.stringify(pullRequest.body);
   core.info(body);
   const indexOfFeatureFlag = body.indexOf(namingConvention);
   const splitDescriptionOnFeatureAreaTag = body.split('[FEATURE AREA]');
 
-  if(indexOfFeatureFlag > 0) {
+  if (indexOfFeatureFlag > 0) {
     const subStringOfPRDescription = body.substring(indexOfFeatureFlag);
     let count = 0;
     let currentChar = subStringOfPRDescription[count];
     let featureFlag = '';
 
-    while(isCharacterALetter(currentChar) || currentChar === '_') {
+    while (isCharacterALetter(currentChar) || currentChar === '_') {
       featureFlag += currentChar;
       ++count;
       currentChar = subStringOfPRDescription[count];
     }
-    return { assignee: pullRequest.user.login , featureFlag, featureArea: splitDescriptionOnFeatureAreaTag[1] || 'N/A' };
+    return { assignee: pullRequest.user.login, featureFlag, featureArea: splitDescriptionOnFeatureAreaTag[1] || 'N/A' };
   }
 
   return null;
@@ -39,12 +39,12 @@ const createFeatureFlagEntryInProject = async () => {
 
     const { assignee, featureFlag, featureArea } = getAndParsePullRequestDescriptionForFeatureFlagAndFeatureArea() || {};
 
-    if(!assignee === undefined || !assignee) {
+    if (!assignee === undefined || !assignee) {
       core.info(`No new Temporary FF Added To This PR`);
       return;
     }
 
-    if(featureFlag == 'temp_web_enable_example_name') {
+    if (featureFlag == 'temp_web_enable_') {
       core.info(`No new Temporary FF Added To This PR`);
       return;
     }
@@ -53,9 +53,9 @@ const createFeatureFlagEntryInProject = async () => {
     const projectIdNumber = core.getInput('projectIdNumber');
     const octokit = github.getOctokit(myToken);
 
-    if(projectIdNumber < 0) { 
+    if (projectIdNumber < 0) {
       core.info(`Invalid project number`);
-      return; 
+      return;
     }
 
     core.info(`Adding to Project, Feature Flag: ${JSON.stringify(featureFlag)}, ${myToken}`);
@@ -91,12 +91,12 @@ const createFeatureFlagEntryInProject = async () => {
       }
     }`);
 
-   if(isFeatureFlagExisting.search.issueCount > 0) {
+    if (isFeatureFlagExisting.search.issueCount > 0) {
       core.info(`This Feature Flag is already in the project`);
       return;
-   }
+    }
 
-   const projectItemLabel = core.getInput('projectItemLabel') || 'Temporary Feature Flag' ;
+    const projectItemLabel = core.getInput('projectItemLabel') || 'Temporary Feature Flag';
 
     const newIssue = await octokit.rest.issues.create({
       ...context.repo,
@@ -110,9 +110,9 @@ const createFeatureFlagEntryInProject = async () => {
 
     const query = buildAddItemToProjectQuery(JSON.stringify(project.organization.projectNext.id), JSON.stringify(newIssue.data.node_id));
     const projectFieldsdQuery = buildProjectFieldsdQuery(JSON.stringify(project.organization.projectNext.id));
-      
 
-    if(newIssue) {
+
+    if (newIssue) {
       const projectFields = await octokit.graphql(projectFieldsdQuery);
       const dateField = getFieldFromProject('Date Added', projectFields.node.fields.nodes);
       const featureAreaField = getFieldFromProject('Feature Area', projectFields.node.fields.nodes);
@@ -132,7 +132,7 @@ const createFeatureFlagEntryInProject = async () => {
     }
 
     core.info(JSON.stringify(newIssue));
-  
+
   } catch (error) {
     core.setFailed(error?.message);
   }
