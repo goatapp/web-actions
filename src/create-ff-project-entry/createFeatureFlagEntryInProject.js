@@ -5,6 +5,7 @@ const { buildFieldQuery, buildAddItemToProjectQuery, buildProjectFieldsdQuery, g
 
 const getAndParsePullRequestDescriptionForFeatureFlagAndFeatureArea = () => {
   const { pull_request: pullRequest } = github.context.payload;
+  const filler = 'Alohamora wand elf parchment, Wingardium Leviosa hippogriff, house dementors.';
 
   if (pullRequest === undefined || pullRequest?.body === undefined) {
     throw new Error('This action should only be run with Pull Request Events');
@@ -32,7 +33,7 @@ const getAndParsePullRequestDescriptionForFeatureFlagAndFeatureArea = () => {
       assignee: pullRequest.user.login, 
       featureFlag, 
       featureArea: splitDescriptionOnFeatureAreaTag[1] || 'N/A',
-      featureDescription: splitDescriptionOnFFDescription[1]
+      featureDescription: !splitDescriptionOnFFDescription[1].includes(filler) ? splitDescriptionOnFFDescription[1] : 'N/A',
     };
   }
 
