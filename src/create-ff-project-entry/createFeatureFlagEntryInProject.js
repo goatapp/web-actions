@@ -1,7 +1,14 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-const { buildFieldQuery, buildAddItemToProjectQuery, buildProjectFieldsdQuery, getFieldFromProject, getOptionIdFromFieldOptions, isCharacterALetter } = require('./utils');
+const {
+  buildFieldQuery,
+  buildAddItemToProjectQuery,
+  buildProjectFieldsdQuery,
+  getFieldFromProject,
+  getOptionIdFromFieldOptions,
+  isCharacterALetter,
+} = require('./utils');
 
 const getAndParsePullRequestDescriptionForFeatureFlagAndFeatureArea = () => {
   const { pull_request: pullRequest } = github.context.payload;
@@ -29,11 +36,13 @@ const getAndParsePullRequestDescriptionForFeatureFlagAndFeatureArea = () => {
       ++count;
       currentChar = subStringOfPRDescription[count];
     }
-    return { 
-      assignee: pullRequest.user.login, 
-      featureFlag, 
+    return {
+      assignee: pullRequest.user.login,
+      featureFlag,
       featureArea: splitDescriptionOnFeatureAreaTag[1] || 'N/A',
-      featureDescription: !splitDescriptionOnFFDescription[1].includes(filler) ? splitDescriptionOnFFDescription[1] : 'N/A',
+      featureDescription: !splitDescriptionOnFFDescription[1].includes(filler)
+        ? splitDescriptionOnFFDescription[1]
+        : 'N/A',
     };
   }
 
@@ -44,7 +53,8 @@ const createFeatureFlagEntryInProject = async () => {
   try {
     core.info('Starting PR Description Check for New FF');
 
-    const { assignee, featureFlag, featureArea, featureDescription } = getAndParsePullRequestDescriptionForFeatureFlagAndFeatureArea() || {};
+    const { assignee, featureFlag, featureArea, featureDescription } =
+      getAndParsePullRequestDescriptionForFeatureFlagAndFeatureArea() || {};
 
     if (!assignee === undefined || !assignee) {
       core.info(`No new Temporary FF Added To This PR`);
@@ -72,7 +82,7 @@ const createFeatureFlagEntryInProject = async () => {
     const project = await octokit.graphql(`{
       organization(login: "goatapp"){
         name
-        projectNext(number: ${parseInt(projectIdNumber)}) {
+        projectV2(number: ${parseInt(projectIdNumber)}) {
           id
         }
       }
@@ -115,25 +125,52 @@ const createFeatureFlagEntryInProject = async () => {
 
     core.info(`Issue Id: ${JSON.stringify(newIssue.data.node_id)}`);
 
-    const query = buildAddItemToProjectQuery(JSON.stringify(project.organization.projectNext.id), JSON.stringify(newIssue.data.node_id));
-    const projectFieldsdQuery = buildProjectFieldsdQuery(JSON.stringify(project.organization.projectNext.id));
-
+    const query = buildAddItemToProjectQuery(
+      JSON.stringify(project.organization.projectV2.id),
+      JSON.stringify(newIssue.data.node_id),
+    );
+    const projectFieldsdQuery = buildProjectFieldsdQuery(
+      JSON.stringify(project.organization.projectV2.id),
+    );
 
     if (newIssue) {
       const projectFields = await octokit.graphql(projectFieldsdQuery);
       const dateField = getFieldFromProject('Date Added', projectFields.node.fields.nodes);
       const featureAreaField = getFieldFromProject('Feature Area', projectFields.node.fields.nodes);
-      const featureDescriptionField = getFieldFromProject('Description', projectFields.node.fields.nodes);
+      const featureDescriptionField = getFieldFromProject(
+        'Description',
+        projectFields.node.fields.nodes,
+      );
       const statusField = getFieldFromProject('Status', projectFields.node.fields.nodes);
       const statusOption = getOptionIdFromFieldOptions(JSON.parse(statusField.settings));
 
       const newProjectRow = await octokit.graphql(query);
-      const today = (new Date()).toISOString().split('T')[0];
+      const today = new Date().toISOString().split('T')[0];
 
-      const updateDateFieldQuery = buildFieldQuery(JSON.stringify(project.organization.projectNext.id), JSON.stringify(newProjectRow.addProjectNextItem.projectNextItem.id), JSON.stringify(dateField.id), JSON.stringify(today));
-      const updateFeatureAreaFieldQuery = buildFieldQuery(JSON.stringify(project.organization.projectNext.id), JSON.stringify(newProjectRow.addProjectNextItem.projectNextItem.id), JSON.stringify(featureAreaField.id), JSON.stringify(featureArea));
-      const updateFeatureDescriptionFieldQuery = buildFieldQuery(JSON.stringify(project.organization.projectNext.id), JSON.stringify(newProjectRow.addProjectNextItem.projectNextItem.id), JSON.stringify(featureDescriptionField.id), JSON.stringify(featureDescription));
-      const updateStatusQuery = buildFieldQuery(JSON.stringify(project.organization.projectNext.id), JSON.stringify(newProjectRow.addProjectNextItem.projectNextItem.id), JSON.stringify(statusField.id), JSON.stringify(statusOption.id));
+      const updateDateFieldQuery = buildFieldQuery(
+        JSON.stringify(project.organization.projectV2.id),
+        JSON.stringify(newProjectRow.addProjectNextItem.projectV2Item.id),
+        JSON.stringify(dateField.id),
+        JSON.stringify(today),
+      );
+      const updateFeatureAreaFieldQuery = buildFieldQuery(
+        JSON.stringify(project.organization.projectV2.id),
+        JSON.stringify(newProjectRow.addProjectNextItem.projectV2Item.id),
+        JSON.stringify(featureAreaField.id),
+        JSON.stringify(featureArea),
+      );
+      const updateFeatureDescriptionFieldQuery = buildFieldQuery(
+        JSON.stringify(project.organization.projectV2.id),
+        JSON.stringify(newProjectRow.addProjectNextItem.projectV2Item.id),
+        JSON.stringify(featureDescriptionField.id),
+        JSON.stringify(featureDescription),
+      );
+      const updateStatusQuery = buildFieldQuery(
+        JSON.stringify(project.organization.projectV2.id),
+        JSON.stringify(newProjectRow.addProjectNextItem.projectV2Item.id),
+        JSON.stringify(statusField.id),
+        JSON.stringify(statusOption.id),
+      );
 
       await octokit.graphql(updateDateFieldQuery);
       await octokit.graphql(updateFeatureAreaFieldQuery);
@@ -142,7 +179,6 @@ const createFeatureFlagEntryInProject = async () => {
     }
 
     core.info(JSON.stringify(newIssue));
-
   } catch (error) {
     core.setFailed(error?.message);
   }
